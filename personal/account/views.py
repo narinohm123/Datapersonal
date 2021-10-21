@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import response, viewsets
 
+
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,7 +11,9 @@ from .serializers import *
 from account import serializers
 from .models import *
 from rest_framework.exceptions import AuthenticationFailed
-import jwt, datetime
+import jwt, datetime 
+
+
 # Create your views here.
 
 @api_view(['GET'])
@@ -24,17 +27,17 @@ def apiOverview(request):
     }
     return Response(api_urls)
 
-class Profile_Detail(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+# class User_detail(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
-class Degree_Detail(viewsets.ModelViewSet):
-    queryset = Degree.objects.all()
-    serializer_class = DegreeSerializer
+# class Degree_Detail(viewsets.ModelViewSet):
+#     queryset = Degree.objects.all()
+#     serializer_class = DegreeSerializer
 
-class User_Degee_Detail(viewsets.ModelViewSet):
-    queryset = User_Degee.objects.all()
-    serializer_class = User_DegeeSerializer
+# class User_Degee_Detail(viewsets.ModelViewSet):
+#     queryset = User_Degee.objects.all()
+#     serializer_class = User_DegeeSerializer
 
 class Faculty_Detail(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
@@ -42,19 +45,17 @@ class Faculty_Detail(viewsets.ModelViewSet):
 
 
 
-
-
 class LoginView(APIView):
     def post(self, request):
-        username = request.data['username']
+        email = request.data['email']
         password = request.data['password']
 
-        user =User.objects.filter(username=username).first()
+        user =User.objects.filter(email=email).first()
 
         if user is None:
             raise AuthenticationFailed('User not found!')
 
-        if not user.check_password(password):
+        if  user.check_password(password): 
             raise AuthenticationFailed('Incorrect password!')
 
         payload = {
@@ -90,6 +91,14 @@ class LoginView(APIView):
 #         user = User.objects.filter(id=payload['id']).first()
 #         serializer = UserSerializer(user)
 #         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def User_data(request):
+    data = User.objects.all()
+    serializer = UserSerializer(data,many=True)
+    return Response(serializer.data)
+        
 
 
 class UserView(APIView):
