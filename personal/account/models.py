@@ -15,12 +15,6 @@ class Faculty(models.Model):
         return self.faculty
 
 class User(AbstractUser):
-    email = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    username = None
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
     image = models.ImageField(default='default.jpg',upload_to='profile_pics', null=True)
     id_Position = models.CharField(max_length=20, null=True)
     title_choice = (
